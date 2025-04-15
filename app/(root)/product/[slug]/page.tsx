@@ -4,6 +4,7 @@ import ProductPrice from "@/components/shared/product/product-price";
 import { Badge } from "@/components/ui/badge";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { getMyCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/product.actions";
 import { notFound } from "next/navigation";
 
@@ -15,6 +16,8 @@ const ProductDetailsPage = async (props: { params: Promise<{ slug: string}>}) =>
     if (!product) {
         return notFound();
     }
+
+    const cart = await getMyCart()
     return ( 
         <section>
             {/*  */}
@@ -61,14 +64,17 @@ const ProductDetailsPage = async (props: { params: Promise<{ slug: string}>}) =>
                             </div>
                             {product.stock > 0 && (
                                 <div className='flex-center mt-4'>
-                                    <AddToCart item={{
-                                        productId: product.id,
-                                        name: product.name,
-                                        image: product.images![0],
-                                        price: product.price,
-                                        qty: 1,
-                                        slug: product.slug,
-                                    }}/>
+                                    <AddToCart 
+                                        cart={cart}
+                                        item={{
+                                            productId: product.id,
+                                            name: product.name,
+                                            image: product.images![0],
+                                            price: product.price,
+                                            qty: 1,
+                                            slug: product.slug,
+                                        }}
+                                    />
                                 </div>
                             )}
                         </CardContent>
